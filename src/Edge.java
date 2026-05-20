@@ -1,54 +1,35 @@
 import java.util.Objects;
 
 public class Edge<T> {
-    private Vertex<T> source;
-    private Vertex<T> dest;
-    private Double weight;
+    private Vertex<T> from;
+    private Vertex<T> to;
+    private Double cost;
 
-    public Edge(Vertex<T> source, Vertex<T> dest, Double weight) {
-        this.source = source;
-        this.dest = dest;
-        this.weight = weight;
+    public Edge(Vertex<T> from, Vertex<T> to, Double cost) {
+        this.from = from;
+        this.to = to;
+        this.cost = cost;
     }
 
-    public Edge(Vertex<T> source, Vertex<T> dest) {
-        this.source = source;
-        this.dest = dest;
+    public Edge(Vertex<T> from, Vertex<T> to) {
+        this.from = from;
+        this.to = to;
     }
 
-    public void setSource(Vertex<T> source) {
-        this.source = source;
-    }
+    public Vertex<T> getSource() { return from; }
+    public void setSource(Vertex<T> from) { this.from = from; }
 
-    public Vertex<T> getSource() {
-        return source;
-    }
+    public Vertex<T> getDest() { return to; }
+    public void setDest(Vertex<T> to) { this.to = to; }
 
-    public void setDest(Vertex<T> dest) {
-        this.dest = dest;
-    }
-
-    public Vertex<T> getDest() {
-        return dest;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
+    public Double getWeight() { return cost; }
+    public void setWeight(Double cost) { this.cost = cost; }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Edge<?> otherEdge = (Edge<?>) o;
-
-        return Objects.equals(this.source, otherEdge.source) &&
-                Objects.equals(this.dest, otherEdge.dest);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Edge<?> e = (Edge<?>) obj;
+        return Objects.equals(from, e.from) && Objects.equals(to, e.to);
     }
 }

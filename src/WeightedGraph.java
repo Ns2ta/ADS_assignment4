@@ -1,81 +1,63 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class WeightedGraph<T> {
-    private final boolean undirected;
-    private final Map<Vertex<T>, List<Edge<T>>> map = new HashMap<>();
+    private final boolean bidirectional;
+    private final Map<Vertex<T>, List<Edge<T>>> adjacency = new HashMap<>();
 
     public WeightedGraph() {
         this(true);
     }
 
-    public WeightedGraph(boolean undirected) {
-        this.undirected = undirected;
+    public WeightedGraph(boolean bidirectional) {
+        this.bidirectional = bidirectional;
     }
 
     public void addVertex(Vertex<T> v) {
-        if (hasVertex(v))
-            return;
-
-        map.put(v, new LinkedList<>());
+        if (hasVertex(v)) return;
+        adjacency.put(v, new LinkedList<>());
     }
 
-    public void addEdge(Vertex<T> source, Vertex<T> dest, double weight) {
-        if (!hasVertex(source))
-            addVertex(source);
+    public void addEdge(Vertex<T> u, Vertex<T> v, double weight) {
+        if (!hasVertex(u)) addVertex(u);
+        if (!hasVertex(v)) addVertex(v);
+        if (hasEdge(u, v) || u.equals(v)) return;
 
-        if (!hasVertex(dest))
-            addVertex(dest);
-
-        if (hasEdge(source, dest)
-                || source.equals(dest))
-            return; // reject parallels & self-loops
-
-        map.get(source).add(new Edge<>(source, dest, weight));
-
-        if (undirected)
-            map.get(dest).add(new Edge<>(dest, source, weight));
+        adjacency.get(u).add(new Edge<>(u, v, weight));
+        if (bidirectional) adjacency.get(v).add(new Edge<>(v, u, weight));
     }
 
     public int getVerticesCount() {
-        return map.size();
+        return adjacency.size();
     }
 
     public int getEdgesCount() {
-        int count = 0;
-        for (Vertex<T> v : map.keySet()) {
-            count += map.get(v).size();
-        }
-
-        if (undirected)
-            count /= 2;
-
-        return count;
+        int total = 0;
+        for (Vertex<T> v : adjacency.keySet())
+            total += adjacency.get(v).size();
+        return bidirectional ? total / 2 : total;
     }
 
     public boolean hasVertex(Vertex<T> v) {
-        return map.containsKey(v);
+        return adjacency.containsKey(v);
     }
 
-    public boolean hasEdge(Vertex<T> source, Vertex<T> dest) {
-        if (!hasVertex(source)) return false;
-
-        return map.get(source).contains(new Edge<>(source, dest));
+    public boolean hasEdge(Vertex<T> u, Vertex<T> v) {
+        return hasVertex(u) && adjacency.get(u).contains(new Edge<>(u, v));
     }
 
     public List<Vertex<T>> adjacencyList(Vertex<T> v) {
         if (!hasVertex(v)) return null;
-
-        List<Vertex<T>> vertices = new LinkedList<>();
-        for (Edge<T> e : map.get(v)) {
-            vertices.add(e.getDest());
-        }
-
-        return vertices;
+        List<Vertex<T>> result = new LinkedList<>();
+        for (Edge<T> e : adjacency.get(v))
+            result.add(e.getDest());
+        return result;
     }
 
     public Iterable<Edge<T>> getEdges(Vertex<T> v) {
         if (!hasVertex(v)) return null;
-
-        return map.get(v);
+        return adjacency.get(v);
     }
 }

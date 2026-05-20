@@ -1,17 +1,16 @@
 public class DepthFirstSearch<T> extends Search<T> {
+
     public DepthFirstSearch(UnweightedGraph<T> graph, Vertex<T> source) {
         super(source);
-
-        dfs(graph, source);
+        explore(graph, source);
     }
 
-    private void dfs(UnweightedGraph<T> graph, Vertex<T> current) {
-        marked.add(current);
-
-        for (Vertex<T> v : graph.adjacencyList(current)) {
-            if (!marked.contains(v)) {
-                edgeTo.put(v, current);
-                dfs(graph, v);
+    private void explore(UnweightedGraph<T> graph, Vertex<T> node) {
+        visited.add(node);
+        for (Vertex<T> neighbor : graph.adjacencyList(node)) {
+            if (!visited.contains(neighbor)) {
+                prev.put(neighbor, node);
+                explore(graph, neighbor);
             }
         }
     }

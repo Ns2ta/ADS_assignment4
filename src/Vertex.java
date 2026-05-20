@@ -3,45 +3,45 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Vertex<T> {
-    private T data;
-    private Map<Vertex<T>, Double> adjacentVertices;
+    T label;
+    Map<Vertex<T>, Double> neighbors;
 
-    public Vertex(T data) {
-        this.data = data;
-        this.adjacentVertices = new HashMap<>();
+    public Vertex(T label) {
+        this.label = label;
+        neighbors = new HashMap<>();
     }
 
     public T getData() {
-        return data;
+        return label;
     }
 
-    public void setData(T data) {
-        this.data = data;
+    public void setData(T newLabel) {
+        this.label = newLabel;
     }
 
     public Map<Vertex<T>, Double> getAdjacentVertices() {
-        return adjacentVertices;
+        return neighbors;
     }
 
-    public void addAdjacentVertex(Vertex<T> destination, double weight) {
-        adjacentVertices.put(destination, weight);
+    public void addAdjacentVertex(Vertex<T> target, double w) {
+        neighbors.put(target, w);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vertex<?> vertex = (Vertex<?>) o;
-        return Objects.equals(data, vertex.data);
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != getClass()) return false;
+        Vertex<?> other = (Vertex<?>) obj;
+        return Objects.equals(label, other.label);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(data);
+        return Objects.hash(label);
     }
 
     @Override
     public String toString() {
-        return data.toString();
+        return label.toString();
     }
 }
